@@ -21,10 +21,33 @@
           Username length should be between 3-8 characters long
         </b-form-invalid-feedback>
         <b-form-invalid-feedback v-if="!$v.form.username.alpha">
-          Username alpha
+          Username must have only letters.
         </b-form-invalid-feedback>
       </b-form-group>
-
+      <b-form-group
+        id="input-group-firstName"
+        label-cols-sm="3"
+        label="First Name:"
+        label-for="firstName"
+      >
+        <b-form-input
+          id="firstName"
+          v-model="$v.form.firstName.$model"
+          type="text"
+        ></b-form-input>
+      </b-form-group>
+      <b-form-group
+        id="input-group-lastName"
+        label-cols-sm="3"
+        label="Last Name:"
+        label-for="lastName"
+      >
+        <b-form-input
+          id="lastName"
+          v-model="$v.form.lastName.$model"
+          type="text"
+        ></b-form-input>
+      </b-form-group>
       <b-form-group
         id="input-group-country"
         label-cols-sm="3"
@@ -66,6 +89,9 @@
         >
           Have length between 5-10 characters long
         </b-form-invalid-feedback>
+        <b-form-invalid-feedback v-if="!$v.form.password.symandnumandalph">
+          your password must contain numbers , letters and special symbol!
+        </b-form-invalid-feedback>
       </b-form-group>
 
       <b-form-group
@@ -89,13 +115,35 @@
           The confirmed password is not equal to the original password
         </b-form-invalid-feedback>
       </b-form-group>
+      <b-form-group
+        id="input-group-email"
+        label-cols-sm="3"
+        label="Email:"
+        label-for="email"
+      >
+        <b-form-input
+          id="email"
+          v-model="$v.form.email.$model"
+          type="text"
+        ></b-form-input>
+      </b-form-group>
+      <b-form-group
+        id="input-group-profilePicture"
+        label-cols-sm="3"
+        label="Profile Picture:"
+        label-for="profilePicture"
+      >
+        <b-form-input
+          id="profilePicture"
+          v-model="$v.form.profilePicture.$model"
+          type="text"
+        ></b-form-input>
+      </b-form-group>
+      <span id="Reset">
+        <b-button type="reset" class="Buttons">Reset</b-button></span
+      >
 
-      <b-button type="reset" variant="danger">Reset</b-button>
-      <b-button
-        type="submit"
-        variant="primary"
-        style="width:250px;"
-        class="ml-5 w-75"
+      <b-button type="submit" style="width:250px;" class="Buttons"
         >Register</b-button
       >
       <div class="mt-2">
@@ -125,10 +173,21 @@ import {
   required,
   minLength,
   maxLength,
+  between,
   alpha,
   sameAs,
-  email
+  email,
+  helpers,
+  and,
 } from "vuelidate/lib/validators";
+
+const symandnumandalph = helpers.regex(
+  "alpha",
+  /(?=.*[@!#\$\^%&*()+=\-\[\]\\\';,\.\/\{\}\|\":<>\? ]+?).*[^_0-9]+?.*/
+);
+
+//const numbers = helpers.regex("alpha", /^[0-9]/);
+//const alphaa = helpers.regex("alpha", /^[ A-Za-z]*$/);
 
 export default {
   name: "Register",
@@ -142,11 +201,12 @@ export default {
         password: "",
         confirmedPassword: "",
         email: "",
-        submitError: undefined
+        profilePicture: "",
+        submitError: undefined,
       },
       countries: [{ value: null, text: "", disabled: true }],
       errors: [],
-      validated: false
+      validated: false,
     };
   },
   validations: {
@@ -154,20 +214,25 @@ export default {
       username: {
         required,
         length: (u) => minLength(3)(u) && maxLength(8)(u),
-        alpha
+        alpha,
       },
       country: {
-        required
+        required,
       },
       password: {
         required,
-        length: (p) => minLength(5)(p) && maxLength(10)(p)
+        length: (p) => minLength(5)(p) && maxLength(10)(p),
+        symandnumandalph,
       },
       confirmedPassword: {
         required,
-        sameAsPassword: sameAs("password")
-      }
-    }
+        sameAsPassword: sameAs("password"),
+      },
+      firstName: {},
+      lastName: {},
+      email: {},
+      profilePicture: {},
+    },
   },
   mounted() {
     // console.log("mounted");
@@ -182,10 +247,18 @@ export default {
     async Register() {
       try {
         const response = await this.axios.post(
-          "https://test-for-3-2.herokuapp.com/user/Register",
+          this.$root.store.base_url + "/Register",
+          // "https://assignment-3-2-mor-danielle.herokuapp.com/Register",
           {
+            /*                         params: { recipe_id: this.$route.params.recipe_id },
+             */
             username: this.form.username,
-            password: this.form.password
+            password: this.form.password,
+            firstName: this.form.firstName,
+            lastName: this.form.lastName,
+            country: this.form.country,
+            email: this.form.email,
+            profilePicture: this.form.profilePicture,
           }
         );
         this.$router.push("/login");
@@ -212,17 +285,53 @@ export default {
         country: null,
         password: "",
         confirmedPassword: "",
-        email: ""
+        email: "",
+        profilePicture: "",
       };
       this.$nextTick(() => {
         this.$v.$reset();
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
 .container {
   max-width: 500px;
+  color: azure;
+  font-family: "Sofia";
+}
+.title {
+  /*   padding-bottom: 10%;
+ */
+  color: azure;
+  text-align: center;
+  font-family: "Sofia";
+  font-size: 40px;
+  padding-bottom: 10px;
+}
+#Reset {
+  padding-right: 20px;
+}
+.Buttons {
+  background: none;
+
+  border-left: solid 1px #ededed;
+  border-right: solid 1px #ededed;
+  border-bottom: solid 1px #ededed;
+  border-top: solid 1px #ededed;
+  padding-bottom: 10px;
+  position: relative;
+  font-family: "Sofia";
+  width: 35%;
+  font-size: 28px;
+  text-align: center;
+  color: white;
+
+  /* z-index: 100;
+     margin-top: 50px; */
+}
+.Buttons:hover {
+  background: rgba(206, 203, 203, 0.55); /* Black see-through */
 }
 </style>

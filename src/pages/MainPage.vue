@@ -1,45 +1,72 @@
 <template>
   <div class="container">
-    <h1 class="title">Main Page</h1>
-    <RecipePreviewList title="Randome Recipes" class="RandomRecipes center" />
-    <router-link v-if="!$root.store.username" to="/login" tag="button">You need to Login to vue this</router-link>
-    {{ !$root.store.username }}
-    <RecipePreviewList
-      title="Last Viewed Recipes"
-      :class="{
-        RandomRecipes: true,
-        blur: !$root.store.username,
-        center: true
-      }"
-      disabled
-    ></RecipePreviewList>
-    <!-- <div
-      style="position: absolute;top: 70%;left: 50%;transform: translate(-50%, -50%);"
-    >
-      Centeredasdasdad
-    </div>-->
+    <b-row>
+      <b-col class="text-center">
+        <h1 class="title">Main Page</h1>
+      </b-col>
+    </b-row>
+    <b-row align-h="around">
+      <b-col cols="5">
+        <RecipePreviewList
+          title="Random Recipes"
+          class="RandomRecipes center"
+        />
+      </b-col>
+      <b-col></b-col>
+
+      <b-col cols="5">
+        <LoginPage id="Login" v-if="!$root.store.username"></LoginPage>
+        <LastWatchedRecipePreviewList
+          v-else
+          title="Last Viewed Recipes"
+          :class="{
+            RandomRecipes: true,
+            center: true,
+          }"
+          disabled
+        ></LastWatchedRecipePreviewList>
+      </b-col>
+    </b-row>
   </div>
 </template>
 
 <script>
 import RecipePreviewList from "../components/RecipePreviewList";
+import LastWatchedRecipePreviewList from "../components/LastWatchedRecipePreviewList";
+import LoginPage from "./LoginPage";
+
 export default {
   components: {
-    RecipePreviewList
-  }
+    LoginPage,
+    RecipePreviewList,
+    LastWatchedRecipePreviewList,
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-.RandomRecipes {
+.title {
+  padding-bottom: 5%;
+  margin-top: 5%;
+
+  color: azure;
+  font-family: "Sofia";
+  font-size: 60px;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px #000000;
+}
+#Login {
+  margin-top: 20%;
+}
+/* .RandomRecipes {
   margin: 10px 0 10px;
 }
 .blur {
-  -webkit-filter: blur(5px); /* Safari 6.0 - 9.0 */
+  -webkit-filter: blur(5px); Safari 6.0 - 9.0 
   filter: blur(2px);
 }
 ::v-deep .blur .recipe-preview {
   pointer-events: none;
   cursor: default;
-}
+}  */
 </style>

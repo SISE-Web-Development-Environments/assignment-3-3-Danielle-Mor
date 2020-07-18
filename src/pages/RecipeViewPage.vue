@@ -1,42 +1,43 @@
 <template>
-  <div class="container">
-    <div v-if="recipe">
-      <div class="recipe-header mt-3 mb-4">
-        <h1>{{ recipe.title }}</h1>
-        <img :src="recipe.image" class="center" />
-      </div>
-      <div class="recipe-body">
-        <div class="wrapper">
-          <div class="wrapped">
-            <div class="mb-3">
-              <div>Ready in {{ recipe.readyInMinutes }} minutes</div>
-              <div>Likes: {{ recipe.aggregateLikes }} likes</div>
-            </div>
-            Ingredients:
-            <ul>
-              <li
-                v-for="(r, index) in recipe.extendedIngredients"
-                :key="index + '_' + r.id"
-              >
-                {{ r.original }}
-              </li>
-            </ul>
-          </div>
-          <div class="wrapped">
-            Instructions:
-            <ol>
-              <li v-for="s in recipe._instructions" :key="s.number">
-                {{ s.step }}
-              </li>
-            </ol>
-          </div>
+  <div>
+    <div id="card-container">
+      <b-row id="recipe-image">
+        <p id="card-title">{{ recipe.recipeName }}</p>
+
+        <div>
+          <img class="recipe-image " :src="recipe.recipeImage" />
         </div>
-      </div>
-      <!-- <pre>
-      {{ $route.params }}
-      {{ recipe }}
-    </pre
-      > -->
+      </b-row>
+
+      <b-row>
+        <div id="details">
+          Prep time:
+          <span class="detail-value">
+            {{ recipe.timeToPrepare }} Minutes |
+          </span>
+          Popularity:
+          <span class="detail-value"> {{ recipe.popularity }} Likes </span>
+        </div>
+      </b-row>
+      <b-row>
+        <div id="card-items">
+          <span class="card-item-title">Ingredients</span>
+          <ul class="checkmark">
+            <li v-for="(r, index) in recipe.ingredients" :key="index">
+              {{ r }}
+            </li>
+          </ul>
+        </div>
+
+        <div id="method">
+          <span class="card-item-title">Method:</span>
+          <ol>
+            <li v-for="(s, index) in recipe.instructions" :key="index">
+              {{ recipe.instructions[index] }}
+            </li>
+          </ol>
+        </div>
+      </b-row>
     </div>
   </div>
 </template>
@@ -45,80 +46,204 @@
 export default {
   data() {
     return {
-      recipe: null
+      recipe: null,
     };
   },
   async created() {
     try {
       let response;
+      let addToLastWatched;
       // response = this.$route.params.response;
-
       try {
+        if (this.$root.store.username) {
+          /*           addToLastWatched =
+          
+           */
+          console.log(this.$route.params.recipe_id);
+
+          await this.axios.post(
+            this.$root.store.base_url + "/users/lastWatched",
+            //  "https://assignment-3-2-mor-danielle.herokuapp.com/users/lastWatched",
+            {
+              recipe_id: this.$route.params.recipe_id,
+            }
+          );
+          console.log("2");
+
+          // console.log(addToLastWatched);
+        }
         response = await this.axios.get(
-          "https://test-for-3-2.herokuapp.com/recipes/info",
+          this.$root.store.base_url + "/recipes/recipeFullInforamation",
+          //   "https://assignment-3-2-mor-danielle.herokuapp.com/recipes/recipeFullInforamation",
           {
-            params: { id: this.$route.params.recipeId }
+            params: { recipe_id: this.$route.params.recipe_id },
           }
         );
-
-        // console.log("response.status", response.status);
+        console.log(response);
+        //console.log("response.status", response.status);
         if (response.status !== 200) this.$router.replace("/NotFound");
       } catch (error) {
-        console.log("error.response.status", error.response.status);
+        // console.log("error.response.status", error.response.status);
+        console.log(error);
         this.$router.replace("/NotFound");
         return;
       }
 
       let {
-        analyzedInstructions,
         instructions,
-        extendedIngredients,
-        aggregateLikes,
-        readyInMinutes,
-        image,
-        title
-      } = response.data.recipe;
+        ingredients,
+        popularity,
+        timeToPrepare,
+        recipeImage,
+        recipeName,
+      } = response.data.data;
 
-      let _instructions = analyzedInstructions
+      /* let _instructions = instructions
         .map((fstep) => {
           fstep.steps[0].step = fstep.name + fstep.steps[0].step;
           return fstep.steps;
         })
-        .reduce((a, b) => [...a, ...b], []);
+        .reduce((a, b) => [...a, ...b], []); */
 
       let _recipe = {
         instructions,
-        _instructions,
-        analyzedInstructions,
-        extendedIngredients,
-        aggregateLikes,
-        readyInMinutes,
-        image,
-        title
+        // _instructions,
+        ingredients,
+        popularity,
+        timeToPrepare,
+        recipeImage,
+        recipeName,
       };
 
       this.recipe = _recipe;
     } catch (error) {
       console.log(error);
     }
-  }
+  },
 };
 </script>
 
 <style scoped>
-.wrapper {
-  display: flex;
-}
-.wrapped {
-  width: 50%;
-}
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
-}
-/* .recipe-header{
+@import url("https://fonts.googleapis.com/css?family=Oxygen:400,700");
 
-} */
+#card-container {
+  /*   box-shadow: 0px 0px 200px #999;
+ */
+  font-family: "Sofia";
+  width: 65%;
+  height: 385px;
+  margin: 5% auto;
+  color: #f9fbfc;
+}
+
+#card-title {
+  box-shadow: 0px 0px 200px rgb(56, 56, 56);
+  font-family: "Sofia";
+  font-weight: 700;
+  font-size: 35px;
+  width: 66.8%;
+  background: #0808087a;
+  position: absolute;
+  top: 25%;
+  padding: 15px 20px;
+  color: white;
+  text-shadow: 2px 2px 4px #000000;
+  border-radius: 10px;
+  text-align: center;
+}
+
+#details {
+  border-radius: 10px 10px 0 0;
+  background: #36363652;
+  border-left: solid 1px #ededed;
+  border-right: solid 1px #ededed;
+  font-size: 16px;
+  font-family: "Sofia";
+  text-shadow: 2px 2px 4px #000000;
+  padding: 15px 20px;
+  color: #f9fbfc;
+  width: 100%;
+}
+
+.detail-value {
+  color: #f9fbfc;
+}
+
+#card-items {
+  background: #58585852;
+  width: 100%;
+  font-family: "Sofia";
+  text-shadow: 2px 2px 4px #000000;
+  padding: 20px;
+  border-bottom: solid 1px #ededed;
+  border-left: solid 1px #ededed;
+  border-right: solid 1px #ededed;
+}
+
+.card-item-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+ul.checkmark li:before {
+  color: #f9fbfc;
+  content: "\2713\0020";
+  font-weight: 600;
+  margin-left: -38px;
+  margin-right: 10px;
+}
+
+.checkmark li {
+  list-style-type: none;
+}
+
+li {
+  margin-bottom: 3px;
+}
+
+#method {
+  background: #58585852;
+  border-left: solid 1px #ededed;
+  border-right: solid 1px #ededed;
+  border-bottom: solid 1px #ededed;
+  padding: 20px;
+}
+
+#method li {
+  list-style-position: inside;
+  margin-bottom: 10px;
+  margin-left: -38px;
+  list-style-type: none;
+}
+
+#recipe-image {
+  overflow: hidden;
+  height: 100%;
+  width: 102%;
+  background-size: cover;
+  border-radius: 40px;
+}
+.recipe-image {
+  height: 100%;
+  width: 240%;
+
+  /*  height: inherit; */
+  border-radius: 40px;
+  /*   object-fit: cover;
+ */
+}
+ol {
+  counter-reset: item;
+}
+
+ol > li {
+  counter-increment: item;
+}
+
+ol > li::before {
+  font-weight: bold;
+
+  content: counter(item) ".";
+  margin-right: 8px;
+}
 </style>

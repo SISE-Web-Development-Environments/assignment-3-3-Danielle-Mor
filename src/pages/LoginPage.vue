@@ -14,7 +14,7 @@
           type="text"
           :state="validateState('username')"
         ></b-form-input>
-        <b-form-invalid-feedback>
+        <b-form-invalid-feedback id="req">
           Username is required
         </b-form-invalid-feedback>
       </b-form-group>
@@ -36,14 +36,8 @@
         </b-form-invalid-feedback>
       </b-form-group>
 
-      <b-button
-        type="submit"
-        variant="primary"
-        style="width:100px;display:block;"
-        class="mx-auto w-100"
-        >Login</b-button
-      >
-      <div class="mt-2">
+      <b-button type="submit" id="Loginbutton">Login</b-button>
+      <div class="mt-2" id="RegisterSug">
         Do not have an account yet?
         <router-link to="register"> Register in here</router-link>
       </div>
@@ -72,19 +66,19 @@ export default {
       form: {
         username: "",
         password: "",
-        submitError: undefined
-      }
+        submitError: undefined,
+      },
     };
   },
   validations: {
     form: {
       username: {
-        required
+        required,
       },
       password: {
-        required
-      }
-    }
+        required,
+      },
+    },
   },
   methods: {
     validateState(param) {
@@ -94,10 +88,11 @@ export default {
     async Login() {
       try {
         const response = await this.axios.post(
-          "https://test-for-3-2.herokuapp.com/user/Login",
+          this.$root.store.base_url + "/Login",
+          //   "https://assignment-3-2-mor-danielle.herokuapp.com/Login",
           {
             username: this.form.username,
-            password: this.form.password
+            password: this.form.password,
           }
         );
         // console.log(response);
@@ -120,12 +115,48 @@ export default {
       // console.log("login method go");
 
       this.Login();
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
 .container {
-  max-width: 400px;
+  max-width: 500px;
+  color: azure;
+  font-family: "Sofia";
+}
+.title {
+  /*   padding-bottom: 10%;
+ */
+  color: azure;
+  text-align: center;
+  font-family: "Sofia";
+  font-size: 40px;
+  padding-bottom: 10px;
+}
+#Loginbutton {
+  background: none;
+
+  border-left: solid 1px #ededed;
+  border-right: solid 1px #ededed;
+  border-bottom: solid 1px #ededed;
+  border-top: solid 1px #ededed;
+  padding-bottom: 10px;
+
+  font-family: "Sofia";
+  margin-left: 30%;
+  width: 35%;
+  font-size: 28px;
+  text-align: center;
+  color: white;
+
+  /* z-index: 100;
+     margin-top: 50px; */
+}
+#Loginbutton:hover {
+  background: rgba(206, 203, 203, 0.55); /* Black see-through */
+}
+#RegisterSug {
+  margin-left: 10%;
 }
 </style>
