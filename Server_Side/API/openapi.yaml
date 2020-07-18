@@ -1,0 +1,803 @@
+openapi: 3.0.0
+info:
+  title: Simple Inventory API
+  description: This is a simple API
+  contact:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    email: lavida@post.bgu.ac.il
+  version: 1.0.1
+servers:
+- url: https://virtserver.swaggerhub.com/lavida/GrandmasRecipes/1.0.1
+  description: SwaggerHub API Auto Mocking
+security:
+- cookieAuth: []
+tags:
+- name: auth
+  description: Operations concerning users registration and login
+- name: users
+  description: All the operations concerning users
+- name: recipes
+  description: All the operations concerning recipes
+paths:
+  /Register:
+    post:
+      tags:
+      - auth
+      summary: Register A New User Into The System
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+            example:
+              mordanielle:
+                value:
+                  username: MorDanielle
+                  password: Mor-Danielle111
+                  firstName: Mor
+                  lastName: Danielle
+                  email: mor@gmail.com
+                  country: Israel
+                  profilePicture: https://www.google.com/url?sa=i&url=https%3A%2F%2Fpixabay.com%2Fillustrations%2Fprofile-profile-picture-human-face-2398782%2F&psig=AOvVaw2ubIJiM4T4KU23pRq_lFE6&ust=1589542956995000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCOCdyZOjs-kCFQAAAAAdAAAAABAv
+        required: true
+      responses:
+        "201":
+          description: User Registered Succesfully
+        "409":
+          description: Username taken
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /Login:
+    post:
+      tags:
+      - auth
+      summary: login
+      requestBody:
+        description: login
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+            examples:
+              mordanielle:
+                value:
+                  username: morDanielle
+                  password: Mor-Danielle111
+        required: true
+      responses:
+        "200":
+          description: login succeeded
+          headers:
+            Set-Cookie:
+              style: simple
+              explode: false
+              schema:
+                type: string
+                example: session=abcde12345;
+        "401":
+          description: Username or Password incorrect
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /Logout:
+    post:
+      tags:
+      - auth
+      summary: logout
+      responses:
+        "200":
+          description: logout succeeded
+      security:
+      - cookieAuth: []
+  /recipes/recipeFullInforamation:
+    get:
+      tags:
+      - recipes
+      description: Returns full inforamtion about the specific recipe
+      parameters:
+      - name: recipe_id
+        in: query
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: 4
+      responses:
+        "200":
+          description: Recipe retrieved succesfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+        "400":
+          description: Bad Request
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /recipes/search:
+    get:
+      tags:
+      - recipes
+      summary: Returns recipes associated with the search keys
+      parameters:
+      - name: recipeName
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: Grilled chicken
+      - name: amountOfRecipes
+        in: query
+        description: The numbers of recipes to be returned
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          example: 10
+          default: 5
+          enum:
+          - 5
+          - 10
+          - 15
+      - name: Cuisine
+        in: query
+        description: The kind of cousine the recipe is associated with.
+        required: false
+        style: form
+        explode: false
+        schema:
+          $ref: '#/components/schemas/Cuisine'
+        example: Italian
+      - name: Diet
+        in: query
+        description: The kind of diet the recipe is associated with.
+        required: false
+        style: form
+        explode: false
+        schema:
+          $ref: '#/components/schemas/Diet'
+        example: ketogenic
+      - name: Intolerances
+        in: query
+        description: The kind of intolerence the recipe is safe for.
+        required: false
+        style: form
+        explode: false
+        schema:
+          $ref: '#/components/schemas/Intolerances'
+        example: Peanut
+      responses:
+        "200":
+          description: Recipes retrieved succesfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /recipes/random:
+    get:
+      tags:
+      - recipes
+      description: returns 3 random recipes
+      responses:
+        "200":
+          description: data of 3 recipes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users/favorites:
+    get:
+      tags:
+      - users
+      description: Returns the user's favorite recipes
+      responses:
+        "200":
+          description: User's favorite recipes retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/inline_response_200_1'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - cookieAuth: []
+    post:
+      tags:
+      - users
+      description: Add new recipe to the user's favorites recipes list
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body'
+      responses:
+        "200":
+          description: User added a favorite recipe succesfully
+        "400":
+          description: not valid id
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - cookieAuth: []
+  /users/lastWatched:
+    get:
+      tags:
+      - users
+      description: Returns the user's 3 last watched recipes
+      responses:
+        "200":
+          description: User's last watched recipes retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/inline_response_200_1'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - cookieAuth: []
+    post:
+      tags:
+      - users
+      description: Add new recipe to the user's last watched recipes list
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body_1'
+      responses:
+        "200":
+          description: User added a watched recipe succesfully
+        "400":
+          description: not valid id
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - cookieAuth: []
+  /users/personalRecipes:
+    get:
+      tags:
+      - users
+      description: Returns the user's personal recipes
+      responses:
+        "200":
+          description: User's personal recipes retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/inline_response_200_2'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - cookieAuth: []
+  /users/fullPersonalRecipe:
+    get:
+      tags:
+      - users
+      description: Returns full inforamtion about the specific recipe
+      parameters:
+      - name: recipeID
+        in: query
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: D49CC854-D447-46BE-89C8-DC40C0D6CDBA
+      responses:
+        "200":
+          description: Recipe retrieved succesfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_3'
+        "400":
+          description: not valid recipeID
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users/familyRecipes:
+    get:
+      tags:
+      - users
+      description: Returns the user's family recipes.
+      responses:
+        "200":
+          description: User's family recipes retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/inline_response_200_4'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - cookieAuth: []
+  /users/fullFamilyRecipes:
+    get:
+      tags:
+      - users
+      description: Returns full inforamtion about the specific recipe
+      parameters:
+      - name: recipeID
+        in: query
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: D49CC854-D447-46BE-89C8-DC40C0D6CDBA
+      responses:
+        "200":
+          description: Recipe retrieved succesfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_5'
+        "400":
+          description: not valid recipeID
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    UserRegistration:
+      properties:
+        username:
+          maxLength: 8
+          minLength: 3
+          pattern: ^[A-Za-z]+$
+          type: string
+          example: MorDanielle
+        password:
+          maxLength: 10
+          minLength: 5
+          pattern: ^(?=.\d)(?=.?[#?!@$%^&*-]).{5,10}$
+          type: string
+          example: Mor-Danielle111
+        passwordConfirmation:
+          maxLength: 10
+          minLength: 5
+          pattern: ^(?=.\d)(?=.?[#?!@$%^&*-]).{5,10}$
+          type: string
+          example: Mor-Danielle111
+        firstName:
+          type: string
+          example: Mor
+        lastName:
+          type: string
+          example: Danielle
+        email:
+          type: string
+          example: Mor@gmail.com
+        country:
+          type: string
+          example: Israel
+        profilePicture:
+          type: string
+          example: https://www.google.com/url?sa=i&url=https%3A%2F%2Fpixabay.com%2Fillustrations%2Fprofile-profile-picture-human-face-2398782%2F&psig=AOvVaw2ubIJiM4T4KU23pRq_lFE6&ust=1589542956995000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCOCdyZOjs-kCFQAAAAAdAAAAABAv
+    Login:
+      properties:
+        username:
+          type: string
+          example: mordanielle
+        password:
+          type: string
+          example: Mor-Danielle111
+    Cuisine:
+      type: string
+      enum:
+      - African
+      - American
+      - British
+      - Cajun
+      - Caribbean
+      - Chinese
+      - Eastern European
+      - European
+      - French
+      - German
+      - Greek
+      - Indian
+      - Irish
+      - Italian
+      - Japanese
+      - Jewish
+      - Korean
+      - Latin American
+      - Mediterranean
+      - Mexican
+      - Middle Eastern
+      - Nordic
+      - Southern
+      - Spanish
+      - Thai
+      - Vietnamese
+    Diet:
+      type: string
+      enum:
+      - Gluten Free
+      - Ketogenic
+      - Vegetarian
+      - Lacto-Vegetarian
+      - Ovo-Vegetarian
+      - Vegan
+      - Pescetarian
+      - Paleo
+      - Primal
+      - Whole30
+    Intolerances:
+      type: string
+      enum:
+      - Dairy
+      - Egg
+      - Gluten
+      - Grain
+      - Peanut
+      - Seafood
+      - Sesame
+      - Shellfish
+      - Soy
+      - Sulfite
+      - Tree Nut
+      - Wheat
+    RecipePreview:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 4
+        recipName:
+          type: string
+          example: spaghetti bolognese
+        timeToPrepare:
+          type: integer
+          example: 15
+        popularity:
+          type: integer
+          example: 150
+        vegetarian:
+          type: boolean
+          example: false
+        vegan:
+          type: boolean
+          example: false
+        glutenFree:
+          type: boolean
+          example: false
+        recipeImage:
+          type: string
+          example: https://www.bbcgoodfood.com/sites/default/files/styles/recipe/public/recipe_images/the-best-spaghetti-bolognese.jpg?itok=PH6AqY-g
+        watched:
+          type: boolean
+          example: true
+        favorite:
+          type: boolean
+          example: true
+    Recipe:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Recipe_data'
+    FamilyRecipePreview:
+      type: object
+      properties:
+        recipeID:
+          type: string
+          example: 071443E1-0E11-4187-862E-682DB655991A
+        recipeName:
+          type: string
+          example: Griiled chicken
+        timeToPrepare:
+          type: string
+          example: 30 Minutes
+        popularity:
+          type: integer
+          example: 150
+        vegetarian:
+          type: boolean
+          example: false
+        vegan:
+          type: boolean
+          example: false
+        glutenFree:
+          type: boolean
+          example: false
+        recipeImage:
+          type: string
+          example: https://www.bbcgoodfood.com/sites/default/files/styles/recipe/public/recipe_images/the-best-spaghetti-bolognese.jpg?itok=PH6AqY-g
+        amountOfServings:
+          type: integer
+          example: 2
+        author:
+          type: string
+          example: Simha Nahum
+        relative:
+          type: string
+          example: Grandmother
+        special_event:
+          type: string
+          example: Mimuna
+    FamilyRecipe:
+      type: object
+      properties:
+        recipeID:
+          type: string
+          example: 071443E1-0E11-4187-862E-682DB655991A
+        recipeName:
+          type: string
+          example: Griiled chicken
+        timeToPrepare:
+          type: string
+          example: 30 Minutes
+        popularity:
+          type: integer
+          example: 150
+        vegetarian:
+          type: boolean
+          example: false
+        vegan:
+          type: boolean
+          example: false
+        glutenFree:
+          type: boolean
+          example: false
+        recipeImage:
+          type: string
+          example: https://www.bbcgoodfood.com/sites/default/files/styles/recipe/public/recipe_images/the-best-spaghetti-bolognese.jpg?itok=PH6AqY-g
+        amountOfServings:
+          type: integer
+          example: 2
+        author:
+          type: string
+          example: Simha Nahum
+        relative:
+          type: string
+          example: Grandmother
+        special_event:
+          type: string
+          example: Mimuna
+        ingredients:
+          type: array
+          items:
+            type: string
+        instructions:
+          $ref: '#/components/schemas/Instruction'
+    PersonalRecipePreview:
+      type: object
+      properties:
+        recipeID:
+          type: string
+          example: 071443E1-0E11-4187-862E-682DB655991A
+        recipeName:
+          type: string
+          example: Griiled chicken
+        timeToPrepare:
+          type: string
+          example: 30 Minutes
+        popularity:
+          type: integer
+          example: 150
+        vegetarian:
+          type: boolean
+          example: false
+        vegan:
+          type: boolean
+          example: false
+        glutenFree:
+          type: boolean
+          example: false
+        recipeImage:
+          type: string
+          example: https://www.bbcgoodfood.com/sites/default/files/styles/recipe/public/recipe_images/the-best-spaghetti-bolognese.jpg?itok=PH6AqY-g
+        amountOfServings:
+          type: integer
+          example: 2
+    PersonalRecipe:
+      type: object
+      properties:
+        recipeID:
+          type: string
+          example: 071443E1-0E11-4187-862E-682DB655991A
+        recipeName:
+          type: string
+          example: Griiled chicken
+        timeToPrepare:
+          type: string
+          example: 30 Minutes
+        popularity:
+          type: integer
+          example: 150
+        vegetarian:
+          type: boolean
+          example: false
+        vegan:
+          type: boolean
+          example: false
+        glutenFree:
+          type: boolean
+          example: false
+        recipeImage:
+          type: string
+          example: https://www.bbcgoodfood.com/sites/default/files/styles/recipe/public/recipe_images/the-best-spaghetti-bolognese.jpg?itok=PH6AqY-g
+        amountOfServings:
+          type: integer
+          example: 2
+        ingredients:
+          type: array
+          items:
+            type: string
+        instructions:
+          $ref: '#/components/schemas/Instruction'
+    Instruction:
+      type: object
+      properties:
+        step:
+          type: string
+          example: "1"
+        instructionString:
+          type: string
+          example: Put a large saucepan on a medium heat and add 1 tbsp olive oil.
+    Error:
+      required:
+      - message
+      - status
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 500
+        message:
+          type: string
+          example: Unexpected Error
+    inline_response_200:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecipePreview'
+    inline_response_200_1:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/RecipePreview'
+    body:
+      type: object
+      properties:
+        recipe_id:
+          type: integer
+          example: 4
+      description: Recipe ID
+    body_1:
+      type: object
+      properties:
+        recipe_id:
+          type: integer
+          example: 4
+      description: Recipe ID
+    inline_response_200_2:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PersonalRecipePreview'
+    inline_response_200_3:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PersonalRecipe'
+    inline_response_200_4:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/FamilyRecipePreview'
+    inline_response_200_5:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/FamilyRecipe'
+    Recipe_data:
+      type: object
+      properties:
+        id:
+          type: integer
+        recipeName:
+          type: string
+          example: Griiled chicken
+        timeToPrepare:
+          type: integer
+          example: 15
+        popularity:
+          type: integer
+          example: 150
+        vegetarian:
+          type: boolean
+          example: false
+        vegan:
+          type: boolean
+          example: false
+        glutenFree:
+          type: boolean
+          example: false
+        recipeImage:
+          type: string
+          example: https://www.bbcgoodfood.com/sites/default/files/styles/recipe/public/recipe_images/the-best-spaghetti-bolognese.jpg?itok=PH6AqY-g
+        amountOfServings:
+          type: integer
+        ingredients:
+          type: array
+          items:
+            type: string
+        instructions:
+          $ref: '#/components/schemas/Instruction'
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      name: session
+      in: cookie
