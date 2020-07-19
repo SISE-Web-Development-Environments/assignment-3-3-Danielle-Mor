@@ -2,9 +2,9 @@
   <div class="containerAbout">
     <span style="color: transparent;">r</span>
     <b-row align-h="around" class="details"
-      >This Website Is Brought To You by
+      >Fooding Is Brought To You by
     </b-row>
-    <b-row align-h="around" class="details"><b>Mor & Danielle Gaming</b></b-row>
+    <b-row align-h="around" class="details"><b>Mor & Danielle </b></b-row>
     <b-row align-h="around" class="details"
       >As Part Of Our Assignment In The Course "Web Development Enviroments"
     </b-row>
@@ -12,12 +12,14 @@
     <b-row align-h="around" class="aboutHead">
       <b-col cols="0.5"></b-col>
       <b-col cols="5" class="about">
+        <span class="aboutName">
+          <b>Mor Nahum</b>
+        </span>
+        <span style="color: transparent;">r</span>
+
         <div class="imgDiv">
           <img class="m1 Myimg" src="../assets/morImage.jpeg" alt="" />
         </div>
-        <span class="aboutName">
-          Mor Nahum
-        </span>
         <b-row class="aboutMe">
           I'm in my third year of studies towards a Software and Information
           Systems Engineering first degree in Ben Gurion University.
@@ -38,12 +40,14 @@
         </b-row>
       </b-col>
       <b-col cols="5" class="about">
+        <span class="aboutName">
+          <b>Danielle Lavi</b>
+        </span>
+        <span style="color: transparent;">r</span>
+
         <div class="imgDiv">
           <img class="Myimg2" src="../assets/DanielImage2.jpeg" alt="" />
         </div>
-        <span class="aboutName">
-          Danielle Lavi
-        </span>
         <b-row class="aboutMe">
           I'm in my third year of studies towards a Software and Information
           Systems Engineering first degree in Ben Gurion University.
@@ -119,7 +123,8 @@ export default {
   overflow: visible;
 }
 .aboutName::after {
-  content: "";
+  /*   content: "";
+ */
   display: flex;
   width: 40%;
   height: 2px;
@@ -128,9 +133,13 @@ export default {
   margin-left: 30%;
 }
 .about {
+  border: 0.5px solid #fff;
   vertical-align: top;
   display: inline-block;
   width: 120px;
+  border-radius: 20px;
+  background: #0000007a;
+  padding: 20px;
 }
 .aboutHead {
   margin-top: 5%;
