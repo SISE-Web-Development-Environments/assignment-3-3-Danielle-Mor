@@ -182,8 +182,8 @@
     <div class="app-desc">This is a simple API</div>
     <div class="app-desc">More information: <a href="http://www.apache.org/licenses/LICENSE-2.0.html">http://www.apache.org/licenses/LICENSE-2.0.html</a></div>
     <div class="app-desc">Contact Info: <a href="lavida@post.bgu.ac.il">lavida@post.bgu.ac.il</a></div>
-    <div class="app-desc">Version: 1.0.1</div>
-    <div class="app-desc">BasePath:/lavida/GrandmasRecipes/1.0.1</div>
+    <div class="app-desc">Version: 1.0.0</div>
+    <div class="app-desc">BasePath:/lavida/GrandmasRecipes/1.0.2</div>
     <div class="license-info">All rights reserved</div>
     <div class="license-url">http://apache.org/licenses/LICENSE-2.0.html</div>
   <h2>Access</h2>
@@ -453,10 +453,13 @@
     <pre class="example"><code>[ {
   "data" : {
     "recipeName" : "Griiled chicken",
-    "instructions" : {
+    "instructions" : [ {
       "instructionString" : "Put a large saucepan on a medium heat and add 1 tbsp olive oil.",
       "step" : "1"
-    },
+    }, {
+      "instructionString" : "Put a large saucepan on a medium heat and add 1 tbsp olive oil.",
+      "step" : "1"
+    } ],
     "recipeImage" : "https://www.bbcgoodfood.com/sites/default/files/styles/recipe/public/recipe_images/the-best-spaghetti-bolognese.jpg?itok=PH6AqY-g",
     "timeToPrepare" : 15,
     "popularity" : 150,
@@ -470,10 +473,13 @@
 }, {
   "data" : {
     "recipeName" : "Griiled chicken",
-    "instructions" : {
+    "instructions" : [ {
       "instructionString" : "Put a large saucepan on a medium heat and add 1 tbsp olive oil.",
       "step" : "1"
-    },
+    }, {
+      "instructionString" : "Put a large saucepan on a medium heat and add 1 tbsp olive oil.",
+      "step" : "1"
+    } ],
     "recipeImage" : "https://www.bbcgoodfood.com/sites/default/files/styles/recipe/public/recipe_images/the-best-spaghetti-bolognese.jpg?itok=PH6AqY-g",
     "timeToPrepare" : 15,
     "popularity" : 150,
@@ -811,6 +817,10 @@
     "vegan" : false,
     "recipeID" : "071443E1-0E11-4187-862E-682DB655991A",
     "recipeName" : "Griiled chicken",
+    "familyImage" : {
+      "imageString" : "https://dafniamit.files.wordpress.com/2012/03/img_4645.jpg",
+      "step" : "1"
+    },
     "timeToPrepare" : "30 Minutes",
     "popularity" : 150,
     "vegetarian" : false,
@@ -1105,6 +1115,7 @@
     <li><a href="#UserRegistration"><code>UserRegistration</code></a></li>
     <li><a href="#body"><code>body</code></a></li>
     <li><a href="#body_1"><code>body_1</code></a></li>
+    <li><a href="#familyImage"><code>familyImage</code></a></li>
     <li><a href="#inline_response_200"><code>inline_response_200</code></a></li>
     <li><a href="#inline_response_200_1"><code>inline_response_200_1</code></a></li>
     <li><a href="#inline_response_200_2"><code>inline_response_200_2</code></a></li>
@@ -1165,6 +1176,7 @@
           <div class="param-desc"><span class="param-type">example: Mimuna</span></div>
 <div class="param">ingredients (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
 <div class="param">instructions (optional)</div><div class="param-desc"><span class="param-type"><a href="#Instruction">Instruction</a></span>  </div>
+<div class="param">familyImage (optional)</div><div class="param-desc"><span class="param-type"><a href="#familyImage">familyImage</a></span>  </div>
     </div>  <!-- field-items -->
   </div>
   <div class="model">
@@ -1327,7 +1339,7 @@
           <div class="param-desc"><span class="param-type">example: https://www.bbcgoodfood.com/sites/default/files/styles/recipe/public/recipe_images/the-best-spaghetti-bolognese.jpg?itok&#x3D;PH6AqY-g</span></div>
 <div class="param">amountOfServings (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  </div>
 <div class="param">ingredients (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">array[String]</a></span>  </div>
-<div class="param">instructions (optional)</div><div class="param-desc"><span class="param-type"><a href="#Instruction">Instruction</a></span>  </div>
+<div class="param">instructions (optional)</div><div class="param-desc"><span class="param-type"><a href="#Instruction">array[Instruction]</a></span>  </div>
     </div>  <!-- field-items -->
   </div>
   <div class="model">
@@ -1366,6 +1378,16 @@
     <div class="field-items">
       <div class="param">recipe_id (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  </div>
           <div class="param-desc"><span class="param-type">example: 4</span></div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
+    <h3><a name="familyImage"><code>familyImage</code></a> <a class="up" href="#__Models">Up</a></h3>
+    
+    <div class="field-items">
+      <div class="param">step (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+          <div class="param-desc"><span class="param-type">example: 1</span></div>
+<div class="param">imageString (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+          <div class="param-desc"><span class="param-type">example: https://dafniamit.files.wordpress.com/2012/03/img_4645.jpg</span></div>
     </div>  <!-- field-items -->
   </div>
   <div class="model">
