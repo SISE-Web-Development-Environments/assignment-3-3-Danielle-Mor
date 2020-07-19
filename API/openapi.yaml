@@ -6,9 +6,9 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
     email: lavida@post.bgu.ac.il
-  version: 1.0.1
+  version: 1.0.0
 servers:
-- url: https://virtserver.swaggerhub.com/lavida/GrandmasRecipes/1.0.1
+- url: https://virtserver.swaggerhub.com/lavida/GrandmasRecipes/1.0.2
   description: SwaggerHub API Auto Mocking
 security:
 - cookieAuth: []
@@ -628,6 +628,8 @@ components:
             type: string
         instructions:
           $ref: '#/components/schemas/Instruction'
+        familyImage:
+          $ref: '#/components/schemas/familyImage'
     PersonalRecipePreview:
       type: object
       properties:
@@ -703,6 +705,15 @@ components:
         instructionString:
           type: string
           example: Put a large saucepan on a medium heat and add 1 tbsp olive oil.
+    familyImage:
+      type: object
+      properties:
+        step:
+          type: string
+          example: "1"
+        imageString:
+          type: string
+          example: https://dafniamit.files.wordpress.com/2012/03/img_4645.jpg
     Error:
       required:
       - message
@@ -795,7 +806,9 @@ components:
           items:
             type: string
         instructions:
-          $ref: '#/components/schemas/Instruction'
+          type: array
+          items:
+            $ref: '#/components/schemas/Instruction'
   securitySchemes:
     cookieAuth:
       type: apiKey
