@@ -6,7 +6,7 @@
     />
     <div id="nav">
       <b-navbar class="bd-navbar " type="dark">
-        <b-navbar-brand tag="h1" class="mb-0">Recipes</b-navbar-brand>
+        <b-navbar-brand tag="h1" class="mb-0">Fooding</b-navbar-brand>
 
         <b-collapse id="nav-collapse" is-nav>
           <b-navbar-nav>

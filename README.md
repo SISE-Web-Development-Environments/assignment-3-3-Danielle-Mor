@@ -1,23 +1,24 @@
-# Assignment 3.3
+# **_Assignment 3.3_**
 
-Welcome to Fooding! We hope you'll enjoy our website and find the perfect recipes for you.
+Welcome to Fooding!
+We hope you'll enjoy our website and find the perfect recipes for you.
 
 This is the last part of our recipes website project.
 We developed this website's Server side using Node.js and the Client side using Vue.js.
 
 This repository includes all the parts of the project: 3.1(API), 3.2(server side), 3.3(client side).
 
-## API:
+## **API**:
 
 The files are in this repository in the folder "API".
 You can also view our API here:
 https://app.swaggerhub.com/apis/lavida/GrandmasRecipes/1.0.2
 
-## Server side:
+## **Server side**:
 
 The files are in this repository in the folder "Server_Side".
 
-## Client side:
+## **Client side**:
 
 The files are in this repository in the folder "Client_Side".
 The last commit before the new changes for the 3.3 part was made by danielavi611
