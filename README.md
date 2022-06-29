@@ -26,6 +26,6 @@ on the 10.06.20 and the comment was "added API URL".
 
 ## About Us:
 
-Danielle Lavi: 203097225 Email: lavida@post.bgu.ac.il
+Danielle Lavi Email: lavida@post.bgu.ac.il
 
-Mor Nahum: 205996747 Email: namor@post.bgu.ac.il
+Mor Nahum Email: namor@post.bgu.ac.il
